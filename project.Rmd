@@ -13,9 +13,31 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r load-packages, warning = FALSE, message = FALSE}
-# load packages
+library(tidyverse)
+library(broom)
+library(knitr)
+library(yardstick)
 ```
 
 ```{r load-data, warning = FALSE, message = FALSE}
-# load data set
+ca <- read_csv("data/CA/ca.csv")
+de <- read_csv("data/DE/de.csv")
+uk <- read_csv("data/UK/uk.csv")
+uk_pc <- read_csv("data/UK/postalcodes.csv")
+us18 <- read_csv("data/US/us_18.csv")
+us19 <- read_csv("data/US/us_19.csv")
 ```
+
+
+Is there a relationship between different mental illnesses and the use of certain drugs?
+
+```{r}
+#ggplot(us18) +
+#  geom_bar(aes(x = MENT_ANX, y = THC_NMU), stat="count")
+
+us18 %>%
+  drop_na(MENT_ANX, THC_NMU) %>%
+  count(MENT_ANX, THC_NMU)
+```
+
+
