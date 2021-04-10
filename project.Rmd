@@ -1,0 +1,21 @@
+---
+title: "DataFest Project"
+author: "Hannah Long, Karam Oubari"
+date: "INSERT DATE"
+output: 
+  pdf_document: 
+    fig_height: 4
+    fig_width: 6
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-packages, warning = FALSE, message = FALSE}
+# load packages
+```
+
+```{r load-data, warning = FALSE, message = FALSE}
+# load data set
+```
