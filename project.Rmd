@@ -32,12 +32,145 @@ us19 <- read_csv("data/US/us_19.csv")
 Is there a relationship between different mental illnesses and the use of certain drugs?
 
 ```{r}
-#ggplot(us18) +
-#  geom_bar(aes(x = MENT_ANX, y = THC_NMU), stat="count")
-
 us18 %>%
   drop_na(MENT_ANX, THC_NMU) %>%
   count(MENT_ANX, THC_NMU)
+
+us18 %>%
+  drop_na(MENT_DEP, STIM_NMU) %>%
+  count(MENT_DEP, STIM_NMU)
 ```
 
+
+
+```{r}
+full_model <- glm(OP_NMU_EVER ~ MENT_ANX + MENT_ADHD + MENT_AUT + MENT_BIP + 
+                   MENT_BPD + MENT_DEP + MENT_EAT + MENT_OCD + 
+                   MENT_PANIC + MENT_PPD + MENT_PTSD + MENT_SCH, 
+                 data = us18,
+                 family = "binomial")
+
+tidy(full_model)
+```
+```{r}
+selected_model <- step(full_model, direction = "backward")
+tidy(selected_model)
+```
+
+```{r}
+exp(-2.2043266) #intercept
+exp(0.5291633) #anxiety
+exp(0.5989596) #adhd
+exp(0.6934428) #autism
+exp(0.4576649) #bipolar disorder
+exp(0.7693153) #borderline personality disorder
+exp(0.2061905) #depression
+exp(0.3939109) #eating disorder
+exp(-0.4207547) #schizophrenia
+```
+
+
+
+```{r}
+us18 %>% #anxiety
+  drop_na(MENT_ANX, OP_NMU_EVER) %>%
+  mutate(opioids = ifelse(OP_NMU_EVER == 1, "Yes", "No")) %>%
+  
+  ggplot(aes(y = MENT_ANX, fill = opioids)) +
+  geom_bar(position = "fill") +
+  scale_fill_discrete(name = "Used opioids before") +
+  labs(x = "Count", y = "Have Anxiety",
+       title = "Greater proportion of those with anxiety have used opioids before") +
+  theme(legend.position = "bottom")
+
+
+
+us18 %>% #adhd
+  drop_na(MENT_ADHD, OP_NMU_EVER) %>%
+  mutate(opioids = ifelse(OP_NMU_EVER == 1, "Yes", "No")) %>%
+  
+  ggplot(aes(y = MENT_ADHD, fill = opioids)) +
+  geom_bar(position = "fill") +
+  scale_fill_discrete(name = "Used opioids before") +
+  labs(x = "Count", y = "Have ADHD",
+       title = "Greater proportion of those with ADHD have used opioids before") +
+  theme(legend.position = "bottom")
+
+
+
+us18 %>% #autism
+  drop_na(MENT_AUT, OP_NMU_EVER) %>%
+  mutate(opioids = ifelse(OP_NMU_EVER == 1, "Yes", "No")) %>%
+  
+  ggplot(aes(y = MENT_AUT, fill = opioids)) +
+  geom_bar(position = "fill") +
+  scale_fill_discrete(name = "Used opioids before") +
+  labs(x = "Count", y = "Have autism",
+       title = "Greater proportion of those with autism have used opioids before") +
+  theme(legend.position = "bottom")
+
+
+
+us18 %>% #bipolar disorder
+  drop_na(MENT_BIP, OP_NMU_EVER) %>%
+  mutate(opioids = ifelse(OP_NMU_EVER == 1, "Yes", "No")) %>%
+  
+  ggplot(aes(y = MENT_BIP, fill = opioids)) +
+  geom_bar(position = "fill") +
+  scale_fill_discrete(name = "Used opioids before") +
+  labs(x = "Count", y = "Have Bipolar Disorder",
+       title = "Greater proportion of those with bipolar disorder have used opioids before") +
+  theme(legend.position = "bottom")
+
+
+
+us18 %>% #borderline personality disorder
+  drop_na(MENT_BPD, OP_NMU_EVER) %>%
+  mutate(opioids = ifelse(OP_NMU_EVER == 1, "Yes", "No")) %>%
+  
+  ggplot(aes(y = MENT_BPD, fill = opioids)) +
+  geom_bar(position = "fill") +
+  scale_fill_discrete(name = "Used opioids before") +
+  labs(x = "Count", y = "Have borderline personality disorder",
+       title = "Greater proportion of those with borderline personality disorder have used opioids before") +
+  theme(legend.position = "bottom")
+
+
+
+us18 %>% #depression
+  drop_na(MENT_DEP, OP_NMU_EVER) %>%
+  mutate(opioids = ifelse(OP_NMU_EVER == 1, "Yes", "No")) %>%
+  
+  ggplot(aes(y = MENT_DEP, fill = opioids)) +
+  geom_bar(position = "fill") +
+  scale_fill_discrete(name = "Used opioids before") +
+  labs(x = "Count", y = "Have depression",
+       title = "Greater proportion of those with depression have used opioids before") +
+  theme(legend.position = "bottom")
+
+
+us18 %>% #eating disorder
+  drop_na(MENT_EAT, OP_NMU_EVER) %>%
+  mutate(opioids = ifelse(OP_NMU_EVER == 1, "Yes", "No")) %>%
+  
+  ggplot(aes(y = MENT_EAT, fill = opioids)) +
+  geom_bar(position = "fill") +
+  scale_fill_discrete(name = "Used opioids before") +
+  labs(x = "Count", y = "Have anorexia or bulimia",
+       title = "Greater proportion of those with an eating disorder have used opioids before") +
+  theme(legend.position = "bottom")
+
+
+
+us18 %>% #schizophrenia 
+  drop_na(MENT_SCH, OP_NMU_EVER) %>%
+  mutate(opioids = ifelse(OP_NMU_EVER == 1, "Yes", "No")) %>%
+  
+  ggplot(aes(y = MENT_SCH, fill = opioids)) +
+  geom_bar(position = "fill") +
+  scale_fill_discrete(name = "Used opioids before") +
+  labs(x = "Count", y = "Have schizophrenia",
+       title = "Greater proportion of those with schizophrenia have used opioids before") +
+  theme(legend.position = "bottom")
+```
 
